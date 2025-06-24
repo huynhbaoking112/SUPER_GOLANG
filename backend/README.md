@@ -25,7 +25,6 @@ backend/
 ├── scripts/                # Automation scripts
 ├── test/                   # Additional tests
 ├── tools/                  # Supporting tools
-└── vendor/                 # Vendor dependencies
 ```
 
 ## Giải thích chi tiết
@@ -75,12 +74,6 @@ pkg/
 └── httpclient/     # HTTP client wrapper
 ```
 
-#### `/vendor`
-**Mục đích**: Chứa dependencies của project.
-
-- Được quản lý tự động bởi Go modules
-- Không chỉnh sửa thủ công
-- Tạo bằng lệnh `go mod vendor`
 
 ### 🚀 Thư mục ứng dụng
 
