@@ -1,0 +1,178 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Environment Variables and Global Configuration Guidelines
+
+Khi làm việc với biến môi trường và configuration trong codebase này, hãy tuân theo các pattern sau:
+
+## 1. Config Structure Pattern
+
+### Định nghĩa Config Struct
+Tất cả config structs phải được định nghĩa trong `pkg/setting/section.go`:
+
+```go
+// Thêm struct mới vào section.go
+type NewService struct {
+    Host     string `mapstructure:"host"`
+    Port     int    `mapstructure:"port"`
+    Username string `mapstructure:"username"`
+    Password string `mapstructure:"password"`
+}
+
+// Cập nhật Config struct để include service mới
+type Config struct {
+    Mysql      Mysql      `mapstructure:"mysql"`
+    Redis      Redis      `mapstructure:"redis"`  
+    Server     Server     `mapstructure:"server"`
+    NewService NewService `mapstructure:"newservice"`
+}
+```
+
+### Quy tắc đặt tên cho Config Struct:
+- Sử dụng PascalCase cho tên struct
+- Sử dụng mapstructure tags với lowercase hoặc camelCase
+- Các field phải có type rõ ràng (string, int, bool, time.Duration)
+
+## 2. Global Variables Pattern
+
+### Khai báo Global Variables
+Tất cả global variables phải được khai báo trong `global/global.go`:
+
+```go
+package global
+
+import (
+    "go-backend-v2/pkg/setting"
+    "gorm.io/gorm"
+    "github.com/redis/go-redis/v9"
+)
+
+var (
+    Config   *setting.Config
+    DB       *gorm.DB           // Database connection
+    RedisClient *redis.Client   // Redis connection
+    Logger   *zap.Logger        // Logger instance
+    // Thêm global variables mới tại đây
+    NewServiceClient *NewServiceClient
+)
+```
+
+### Quy tắc cho Global Variables:
+- Sử dụng PascalCase cho tên biến
+- Luôn sử dụng pointer types cho complex objects
+- Group các biến liên quan lại với nhau
+- Thêm comment để giải thích purpose của biến
+
+## 3. Config Loading Pattern
+
+### Viper Configuration
+File `internal/initialize/loadconfig.go` handle việc load config:
+
+```go
+func LoadConfig() {
+    viper := viper.New()
+    viper.AddConfigPath("configs")
+    viper.SetConfigName("local")  // Hoặc dựa trên ENV
+    viper.SetConfigType("yaml")
+    
+    // Hỗ trợ environment variables
+    viper.AutomaticEnv()
+    viper.SetEnvPrefix("APP") // APP_MYSQL_HOST, APP_REDIS_PORT, etc.
+    
+    if err := viper.ReadInConfig(); err != nil {
+        panic(fmt.Errorf("ERROR READING CONFIG FILE: %v", err))
+    }
+    
+    if err := viper.Unmarshal(&global.Config); err != nil {
+        panic(fmt.Errorf("ERROR UNMARSHALLING CONFIG: %v", err))
+    }
+}
+```
+
+## 4. Service Initialization Pattern
+
+### Tạo Init Functions
+Mỗi service cần có init function trong `internal/initialize/`:
+
+```go
+// File: internal/initialize/newservice.go
+package initialize
+
+import (
+    "go-backend-v2/global"
+    "fmt"
+)
+
+func InitNewService() {
+    cfg := global.Config.NewService
+    
+    client := NewServiceClient{
+        Host:     cfg.Host,
+        Port:     cfg.Port,
+        Username: cfg.Username,
+        Password: cfg.Password,
+    }
+    
+    if err := client.Connect(); err != nil {
+        panic(fmt.Errorf("failed to connect to NewService: %v", err))
+    }
+    
+    global.NewServiceClient = &client
+}
+```
+
+### Cập nhật Run Function
+Thêm init function vào `internal/initialize/run.go`:
+
+```go
+func Run() {
+    LoadConfig()
+    InitMysql()
+    InitRedis()
+    InitLogger()
+    InitNewService() // Thêm init function mới
+}
+```
+
+## 5. Configuration File Pattern
+
+### YAML Configuration Structure
+File `configs/local.yaml` phải follow structure:
+
+```yaml
+server:
+  port: 8080
+  host: "localhost"
+
+mysql:
+  host: "localhost"
+  port: 3306
+  user: "root"
+  password: "root"
+  dbName: "IAM"
+  maxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifetime: "10m"
+  connMaxIdleTime: "10m"
+
+redis:
+  host: "localhost"
+  port: 6379
+  password: "root"
+
+newservice:
+  host: "localhost"
+  port: 9090
+  username: "admin"
+  password: "secret"
+```
+
+Khi cần thêm configuration mới, hãy follow đúng sequence:
+1. Thêm struct vào `pkg/setting/section.go`
+2. Thêm field vào Config struct
+3. Thêm values vào `configs/local.yaml`
+4. Tạo init function trong `internal/initialize/`
+5. Thêm global variable vào `global/global.go`
+6. Cập nhật `Run()` function

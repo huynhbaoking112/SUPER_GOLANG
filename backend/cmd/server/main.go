@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"go-backend-v2/global"
+	"go-backend-v2/internal/initialize"
 	"go-backend-v2/internal/router"
 	"log"
 
@@ -8,19 +11,29 @@ import (
 )
 
 func main() {
+	initialize.Run()
 
-	// Initialize Fiber app
 	app := fiber.New(fiber.Config{
-		AppName:               "IAM",
-		DisableStartupMessage: false,
+		AppName: "IAM",
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			code := fiber.StatusInternalServerError
+			if e, ok := err.(*fiber.Error); ok {
+				code = e.Code
+			}
+
+			return c.Status(code).JSON(fiber.Map{
+				"error":  err.Error(),
+				"code":   code,
+				"path":   c.Path(),
+				"method": c.Method(),
+			})
+		},
 	})
 
-	// Setup routes
 	router.SetupRoutes(app)
 
-	// Start server
-	log.Println("Server is running on port 8080")
-	if err := app.Listen(":8080"); err != nil {
-		log.Fatal("Server failed to start:", err)
+	port := fmt.Sprintf(":%d", global.Config.Server.Port)
+	if err := app.Listen(port); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
 	}
 }

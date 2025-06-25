@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: go-backend-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - go-backend-network
+  mysql:
+    image: mysql:8.0
+    container_name: go-backend-mysql
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: IAM
+      MYSQL_USER: king
+      MYSQL_PASSWORD: king
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - go-backend-network
+volumes:
+  redis_data:
+    driver: local
+  mysql_data:
+    driver: local
+
+networks:
+  go-backend-network:
+    driver: bridge
