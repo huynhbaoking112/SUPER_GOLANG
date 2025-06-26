@@ -29,6 +29,7 @@ You are an expert in Go, microservices architecture, and clean backend developme
 - Keep logic decoupled from framework-specific code.
 
 ### Development Best Practices:
+- If possible, code according to **design pattern** ( Creational pattern, Structural pattern, Behavior Pattern - 23 popular pattern in the world ). If not necessary, do not code according to them 
 - Write **short, focused functions** with a single responsibility.
 - Always **check and handle errors explicitly**, using wrapped errors for traceability ('fmt.Errorf("context: %w", err)').
 - Avoid **global state**; use constructor functions to inject dependencies.

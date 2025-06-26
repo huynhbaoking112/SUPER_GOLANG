@@ -1,0 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## Viết lại tips go
+<Yêu cầu>
+- Viết lại tips này vào trong @tipsgo.md 
+</Yêu cầu>
+<Context>
+- Tôi đang học ngôn ngữ golang và đọc về các tips cũng như priciple của nó tôi muốn bạn giúp tôi viết lại vào @tipsgo.md tips này để tôi có thể đọc lại sau này.
+</Context>
+<Note>
+- Viết dạng như một quyển sách
+- Nếu có hình vẽ thì dùng mermaid cho trực quan
+- Ưu tiên vẽ hình nhiều để dễ hiểu
+<Note>
