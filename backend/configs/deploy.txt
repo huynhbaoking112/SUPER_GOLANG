@@ -1,3 +1,5 @@
 cd /sapha/SUPER_GOLANG/backend
 docker build -f configs/Dockerfile -t iam . --no-cache
-# docker run -d --name iam -p 8080:8080 --network configs_go-backend-network iam
+docker run -d --name iam -p 8080:8080 --network configs_go-backend-network iam
+# One-liner để redeploy nhanh
+cd /sapha/SUPER_GOLANG/backend && docker stop iam && docker rm iam && docker rmi iam && docker build -f configs/Dockerfile -t iam . --no-cache && docker run -d --name iam --network configs_go-backend-network -p 8080:8080 iam
