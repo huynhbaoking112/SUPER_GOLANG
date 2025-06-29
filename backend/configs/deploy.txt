@@ -1,0 +1,3 @@
+cd /sapha/SUPER_GOLANG/backend
+docker build -f configs/Dockerfile -t iam .
+# docker run -d --name iam -p 8080:8080 --network configs_go-backend-network iam
