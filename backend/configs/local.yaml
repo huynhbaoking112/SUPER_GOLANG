@@ -1,5 +1,17 @@
 server:
   port: 8080
+
+mysql:
+  host: localhost
+  port: 3307
+  user: root
+  password: root
+  dbName: IAM
+  maxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifetime: 60
+  connMaxIdleTime: 60
+
 redis:
   host: localhost
   port: 6379

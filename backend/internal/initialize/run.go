@@ -2,7 +2,7 @@ package initialize
 
 func Run() {
 	LoadConfig()
-	InitPostgresDB()
+	InitMysql()
 	InitRedis()
 	InitLogger()
 }
