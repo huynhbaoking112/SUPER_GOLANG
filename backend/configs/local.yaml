@@ -2,9 +2,10 @@ server:
   port: 8080
 
 mysql:
-  # host: localhost
-  host: go-backend-mysql
-  port: 3306
+  host: localhost
+  # host: go-backend-mysql
+  port: 3307
+  # port: 3306
   user: root
   password: root
   dbName: IAM
@@ -14,8 +15,8 @@ mysql:
   connMaxIdleTime: 60
 
 redis:
-  host: go-backend-redis
-  # host: localhost
+  # host: go-backend-redis
+  host: localhost
   port: 6379
   password: King_112
   db: 0

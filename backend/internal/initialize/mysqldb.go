@@ -44,5 +44,5 @@ func InitMysql() {
 
 	global.DB = db
 
-	fmt.Printf("✅ MySQL connected successfully at %s:%d (Database: %s)\n", cfg.Host, cfg.Port, cfg.DbName)
+	fmt.Printf("MySQL connected successfully at %s:%d (Database: %s)\n", cfg.Host, cfg.Port, cfg.DbName)
 }

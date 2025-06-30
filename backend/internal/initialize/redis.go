@@ -34,5 +34,5 @@ func InitRedis() {
 
 	global.RedisClient = client
 
-	fmt.Printf("✅ Redis connected successfully at %s:%d (DB: %d)\n", cfg.Host, cfg.Port, cfg.DB)
+	fmt.Printf("Redis connected successfully at %s:%d (DB: %d)\n", cfg.Host, cfg.Port, cfg.DB)
 }
