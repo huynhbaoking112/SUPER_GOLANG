@@ -37,6 +37,32 @@ You are an expert in Go, microservices architecture, and clean backend developme
 - Use **goroutines safely**; guard shared state with channels or sync primitives.
 - **Defer closing resources** and handle them carefully to avoid leaks.
 
+### Centralized Error Handling:
+- **ALWAYS use centralized error handling** through `internal/common/httpError.go` and the global error handler in `main.go`.
+- **Define all API errors** as constants in `internal/common/httpError.go` using the `APIError` struct format:
+  ```go
+  var (
+    ErrUserNotFound = &APIError{
+      Status: http.StatusNotFound, 
+      Code: "USER_NOT_FOUND", 
+      Message: "User not found"
+    }
+  )
+  ```
+- **Controllers should return errors directly** - never manually create JSON error responses. Let the centralized error handler process them.
+- **Services and utilities should return APIError constants** for business logic errors, and wrapped errors for technical failures.
+- **Error response format is standardized** through the centralized handler:
+  ```json
+  {
+    "error": "Not Found",
+    "code": "USER_NOT_FOUND", 
+    "message": "User not found",
+    "path": "/api/v1/users/123"
+  }
+  ```
+- **Error handler is configured** in `main.go` using `fiber.Config{ErrorHandler: middlewares.ErrorHandler}`.
+- **Consistent error codes** should follow pattern: `RESOURCE_ACTION_FAILURE` (e.g., `USER_CREATE_FAILED`, `TOKEN_VALIDATION_FAILED`).
+
 ### Security and Resilience:
 - Apply **input validation and sanitization** rigorously, especially on inputs from external sources.
 - Use secure defaults for **JWT, cookies**, and configuration settings.

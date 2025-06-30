@@ -4,31 +4,23 @@ import (
 	"fmt"
 	"go-backend-v2/global"
 	"go-backend-v2/internal/initialize"
+	"go-backend-v2/internal/middlewares"
 	"go-backend-v2/internal/router"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 func main() {
 	initialize.Run()
 
 	app := fiber.New(fiber.Config{
-		AppName: "IAM",
-		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			code := fiber.StatusInternalServerError
-			if e, ok := err.(*fiber.Error); ok {
-				code = e.Code
-			}
-
-			return c.Status(code).JSON(fiber.Map{
-				"error":  err.Error(),
-				"code":   code,
-				"path":   c.Path(),
-				"method": c.Method(),
-			})
-		},
+		AppName:      "IAM",
+		ErrorHandler: middlewares.ErrorHandler,
 	})
+
+	app.Use(recover.New())
 
 	router.SetupRoutes(app)
 

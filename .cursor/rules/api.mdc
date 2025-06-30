@@ -15,6 +15,7 @@ backend/
 │   ├── controllers/           # Request handlers (presentation layer)
 │   ├── services/             # Business logic (use case layer)  
 │   ├── repo/                 # Data access (repository layer)
+|   |── common/               # common data ex: constant message error
 │   ├── models/               # Domain entities
 │   ├── middlewares/          # Cross-cutting concerns
 │   └── router/

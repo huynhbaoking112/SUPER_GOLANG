@@ -1,5 +1,6 @@
 ---
-description:
-globs:
-alwaysApply: false
+description: 
+globs: 
+alwaysApply: true
 ---
+- When you use any constant, you must create its constant in a constant file in the /internal/common for reuse and easy modification, avoid hardcoding, constant files must be divided into sets, for example user status is a constant file, error message is a constant file
