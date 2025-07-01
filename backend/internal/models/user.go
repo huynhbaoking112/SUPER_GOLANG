@@ -59,19 +59,3 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	}
 	return
 }
-
-// Constants for user status
-const (
-	UserStatusActive    = "active"
-	UserStatusInactive  = "inactive"
-	UserStatusSuspended = "suspended"
-	UserStatusPending   = "pending"
-	UserStatusDeleted   = "deleted"
-)
-
-// Constants for global roles
-const (
-	GlobalRoleSuperAdmin  = "super_admin"
-	GlobalRoleSuperMember = "super_member"
-	GlobalRoleCustomer    = "customer"
-)

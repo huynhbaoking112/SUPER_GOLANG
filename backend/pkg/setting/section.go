@@ -1,5 +1,7 @@
 package setting
 
+import "time"
+
 type Server struct {
 	Port int `mapstructure:"port"`
 }
@@ -29,8 +31,22 @@ type Mysql struct {
 	ConnMaxIdleTime int    `mapstructure:"connMaxIdleTime"`
 }
 
+type JWT struct {
+	Secret         string        `mapstructure:"secret"`
+	ExpirationTime time.Duration `mapstructure:"expiration_time"`
+}
+
+type Cookie struct {
+	Domain   string `mapstructure:"domain"`
+	Secure   bool   `mapstructure:"secure"`
+	HttpOnly bool   `mapstructure:"http_only"`
+	SameSite string `mapstructure:"same_site"`
+}
+
 type Config struct {
 	Server Server `mapstructure:"server"`
 	Redis  Redis  `mapstructure:"redis"`
 	Mysql  Mysql  `mapstructure:"mysql"`
+	JWT    JWT    `mapstructure:"jwt"`
+	Cookie Cookie `mapstructure:"cookie"`
 }

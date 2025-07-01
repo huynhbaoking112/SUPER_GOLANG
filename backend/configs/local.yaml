@@ -26,3 +26,13 @@ redis:
   readTimeout: 3
   writeTimeout: 3
   connMaxIdleTime: 60
+
+jwt:
+  secret: "SaphaKing"
+  expiration_time: "72h"
+
+cookie:
+  domain: ""
+  secure: false 
+  http_only: true
+  same_site: "Strict"

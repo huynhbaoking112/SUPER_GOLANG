@@ -20,6 +20,8 @@ func NewRouteManager() *RouteManager {
 
 	routeModules := []routes.RouteModule{
 		routes.NewPublicRoutes(),
+		routes.NewAuthRoutes(),
+		routes.NewUserRoutes(),
 	}
 
 	return &RouteManager{
@@ -44,9 +46,6 @@ func (rm *RouteManager) SetupRoutes(app *fiber.App) {
 		TimeFormat: "2006-01-02 15:04:05",
 	}))
 
-	// ======================
-	// SETUP ROUTE MODULES
-	// ======================
 	publicRoutes := routes.NewPublicRoutes()
 	publicRoutes.SetupRoutes(app)
 

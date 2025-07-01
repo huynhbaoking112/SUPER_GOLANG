@@ -24,7 +24,7 @@ func (h *HealthController) GetHealth(c *fiber.Ctx) error {
 	redisClient.Set(context.Background(), "test", "test", 0)
 	return c.JSON(fiber.Map{
 		"status":  "OK",
-		"message": "Server is running! 🚀",
+		"message": "Server is running!",
 		"service": "go-backend-v2",
 		"path":    c.Path(),
 	})
@@ -32,7 +32,7 @@ func (h *HealthController) GetHealth(c *fiber.Ctx) error {
 
 func (h *HealthController) GetTest(c *fiber.Ctx) error {
 	response := fiber.Map{
-		"message": "Test endpoint working! 👋",
+		"message": "Test endpoint working!",
 		"path":    c.Path(),
 		"method":  c.Method(),
 	}

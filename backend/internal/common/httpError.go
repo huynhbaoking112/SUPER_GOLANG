@@ -6,9 +6,9 @@ import (
 )
 
 type APIError struct {
-	Status  int    // HTTP status code
-	Code    string // Application-specific error code
-	Message string // Human-readable message
+	Status  int
+	Code    string
+	Message string
 }
 
 func (e *APIError) Error() string {
@@ -41,4 +41,20 @@ var (
 	ErrRegistrationFailed   = &APIError{Status: http.StatusInternalServerError, Code: "REGISTRATION_FAILED", Message: "Failed to register user"}
 	ErrAuthenticationFailed = &APIError{Status: http.StatusInternalServerError, Code: "AUTHENTICATION_FAILED", Message: "Failed to authenticate user"}
 	ErrInvalidRequestBody   = &APIError{Status: http.StatusBadRequest, Code: "INVALID_REQUEST_BODY", Message: "Invalid request body"}
+
+	// Validation specific errors
+	ErrEmailAlreadyExists = &APIError{Status: http.StatusConflict, Code: "EMAIL_ALREADY_EXISTS", Message: "Email already exists"}
+	ErrWeakPassword       = &APIError{Status: http.StatusBadRequest, Code: "WEAK_PASSWORD", Message: "Password must be at least 6 characters with uppercase, number and special character"}
+	ErrValidationFailed   = &APIError{Status: http.StatusBadRequest, Code: "VALIDATION_FAILED", Message: "Validation failed"}
+	ErrInvalidEmail       = &APIError{Status: http.StatusBadRequest, Code: "INVALID_EMAIL", Message: "Invalid email format"}
+	ErrPasswordTooShort   = &APIError{Status: http.StatusBadRequest, Code: "PASSWORD_TOO_SHORT", Message: "Password must be at least 6 characters long"}
+	ErrPasswordTooWeak    = &APIError{Status: http.StatusBadRequest, Code: "PASSWORD_TOO_WEAK", Message: "Password must contain uppercase, lowercase, number, and special character"}
+
+	// User management errors
+	ErrUserCreationFailed = &APIError{Status: http.StatusInternalServerError, Code: "USER_CREATION_FAILED", Message: "Failed to create user"}
+	ErrUserUpdateFailed   = &APIError{Status: http.StatusInternalServerError, Code: "USER_UPDATE_FAILED", Message: "Failed to update user"}
+	ErrUserDeleteFailed   = &APIError{Status: http.StatusInternalServerError, Code: "USER_DELETE_FAILED", Message: "Failed to delete user"}
+
+	// Database transaction errors
+	ErrTransactionFailed = &APIError{Status: http.StatusInternalServerError, Code: "TRANSACTION_FAILED", Message: "Database transaction failed"}
 )
