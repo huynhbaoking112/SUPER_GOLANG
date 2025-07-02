@@ -1,3 +1,4 @@
+https://chatgpt.com/share/6863f224-1630-800f-9327-49041d79e372
 cd /sapha/SUPER_GOLANG/backend
 docker build -f configs/Dockerfile -t iam . --no-cache
 docker run -d --name iam -p 8080:8080 --network configs_go-backend-network iam

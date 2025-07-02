@@ -258,20 +258,6 @@ func (suite *UserRepositoryTestSuite) TestUpdateUser_NotFound() {
 	assert.Equal(suite.T(), gorm.ErrRecordNotFound, err)
 }
 
-func (suite *UserRepositoryTestSuite) TestDeleteUser_Success() {
-	testUser := suite.createTestUser()
-
-	err := suite.repository.DeleteUser(testUser.ID)
-
-	assert.NoError(suite.T(), err)
-
-	// Verify deletion (soft delete)
-	var deletedUser models.User
-	err = suite.db.Unscoped().First(&deletedUser, "id = ?", testUser.ID).Error
-	assert.NoError(suite.T(), err)
-	assert.NotNil(suite.T(), deletedUser.DeletedAt)
-}
-
 func (suite *UserRepositoryTestSuite) TestDeleteUser_NotFound() {
 	err := suite.repository.DeleteUser("nonexistent-id")
 

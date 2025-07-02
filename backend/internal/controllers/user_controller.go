@@ -38,3 +38,24 @@ func (c *UserController) GetCurrentUser(ctx *fiber.Ctx) error {
 		"data":    user,
 	})
 }
+
+func (c *UserController) DeleteUser(ctx *fiber.Ctx) error {
+	userID := ctx.Locals(common.ContextUserID)
+	if userID == nil {
+		return common.ErrUnauthorized
+	}
+
+	userIDStr, ok := userID.(string)
+	if !ok {
+		return common.ErrUnauthorized
+	}
+
+	err := c.userService.DeleteUser(userIDStr)
+	if err != nil {
+		return common.ErrUserNotFound
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "User deleted successfully",
+	})
+}

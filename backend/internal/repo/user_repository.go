@@ -115,7 +115,8 @@ func (r *UserRepository) UpdateUser(userID string, updates map[string]interface{
 
 // DeleteUser soft deletes a user
 func (r *UserRepository) DeleteUser(userID string) error {
-	result := r.db.Delete(&models.User{}, "id = ?", userID)
+	// result := r.db.Delete(&models.User{}, "id = ?", userID)
+	result := r.db.Model(&models.User{}).Where("id = ?", userID).Update("status", "deleted")
 	if result.Error != nil {
 		return fmt.Errorf("failed to delete user: %w", result.Error)
 	}
@@ -174,7 +175,8 @@ func (r *UserRepository) UpdateAuthProvider(providerID string, updates map[strin
 
 // DeleteAuthProvider deletes an auth provider
 func (r *UserRepository) DeleteAuthProvider(providerID string) error {
-	result := r.db.Delete(&models.UserAuthProvider{}, "id = ?", providerID)
+	// result := r.db.Delete(&models.UserAuthProvider{}, "id = ?", providerID)
+	result := r.db.Model(&models.UserAuthProvider{}).Where("id = ?", providerID).Update("status", "deleted")
 	if result.Error != nil {
 		return fmt.Errorf("failed to delete auth provider: %w", result.Error)
 	}

@@ -9,6 +9,7 @@ import (
 type UserServiceInterface interface {
 	GetUserWithWorkspaces(userID string) (*models.User, error)
 	GetUserProfile(userID string) (*models.User, error)
+	DeleteUser(userID string) error
 }
 
 type UserService struct {
@@ -43,4 +44,8 @@ func (s *UserService) GetUserProfile(userID string) (*models.User, error) {
 	}
 
 	return user, nil
+}
+
+func (s *UserService) DeleteUser(userID string) error {
+	return s.userRepo.DeleteUser(userID)
 }

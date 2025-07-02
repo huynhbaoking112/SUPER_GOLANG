@@ -36,4 +36,5 @@ func (r *UserRoutes) SetupRoutes(router fiber.Router) {
 	userGroup.Use(middlewares.AuthMiddleware(r.authService))
 
 	userGroup.Get("/me", r.controller.GetCurrentUser)
+	userGroup.Delete("/me", r.controller.DeleteUser)
 }

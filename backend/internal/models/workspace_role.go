@@ -16,6 +16,7 @@ type WorkspaceRole struct {
 	Permissions RolePermissions `gorm:"type:json;not null" json:"permissions"`
 	CreatedAt   time.Time       `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt   time.Time       `gorm:"autoUpdateTime" json:"updated_at"`
+	Status      string          `gorm:"type:varchar(50);not null;default:'active';index" json:"status"`
 
 	// Relationships
 	Workspace   Workspace                 `gorm:"constraint:OnDelete:CASCADE" json:"workspace,omitempty"`

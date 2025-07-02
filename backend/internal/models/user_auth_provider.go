@@ -39,17 +39,17 @@ func (pd *ProviderData) Scan(value interface{}) error {
 }
 
 type UserAuthProvider struct {
-	ID             string         `gorm:"type:varchar(36);primaryKey" json:"id"`
-	UserID         string         `gorm:"type:varchar(36);not null;index:idx_user_provider" json:"user_id"`
-	Provider       string         `gorm:"type:varchar(50);not null;index:idx_user_provider" json:"provider"`
-	ProviderUserID string         `gorm:"type:varchar(255);not null" json:"provider_user_id"`
-	ProviderEmail  *string        `gorm:"type:varchar(255);index" json:"provider_email,omitempty"`
-	ProviderData   ProviderData   `gorm:"type:json" json:"provider_data,omitempty"`
-	PasswordHash   *string        `gorm:"type:varchar(255)" json:"password_hash,omitempty"`
-	IsPrimary      bool           `gorm:"not null;default:false" json:"is_primary"`
-	CreatedAt      time.Time      `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt      time.Time      `gorm:"autoUpdateTime" json:"updated_at"`
-	DeletedAt      gorm.DeletedAt `gorm:"index" json:"-"`
+	ID             string       `gorm:"type:varchar(36);primaryKey" json:"id"`
+	UserID         string       `gorm:"type:varchar(36);not null;index:idx_user_provider" json:"user_id"`
+	Provider       string       `gorm:"type:varchar(50);not null;index:idx_user_provider" json:"provider"`
+	ProviderUserID string       `gorm:"type:varchar(255);not null" json:"provider_user_id"`
+	ProviderEmail  *string      `gorm:"type:varchar(255);index" json:"provider_email,omitempty"`
+	ProviderData   ProviderData `gorm:"type:json" json:"provider_data,omitempty"`
+	PasswordHash   *string      `gorm:"type:varchar(255)" json:"password_hash,omitempty"`
+	IsPrimary      bool         `gorm:"not null;default:false" json:"is_primary"`
+	CreatedAt      time.Time    `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt      time.Time    `gorm:"autoUpdateTime" json:"updated_at"`
+	Status         string       `gorm:"type:varchar(50);not null;default:'active';index" json:"status"`
 	// Relationships
 	User User `gorm:"constraint:OnDelete:CASCADE" json:"user,omitempty"`
 }

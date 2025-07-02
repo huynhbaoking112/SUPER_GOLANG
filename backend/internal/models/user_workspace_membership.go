@@ -13,7 +13,7 @@ type UserWorkspaceMembership struct {
 	UserID      string     `gorm:"type:varchar(36);not null;index" json:"user_id"`
 	WorkspaceID string     `gorm:"type:varchar(36);not null;index" json:"workspace_id"`
 	RoleID      string     `gorm:"type:varchar(36);not null" json:"role_id"`
-	Status      string     `gorm:"type:varchar(50);not null;default:'pending';index" json:"status"`
+	Status      string     `gorm:"type:varchar(50);not null;default:'active';index" json:"status"`
 	InvitedBy   *string    `gorm:"type:varchar(36)" json:"invited_by,omitempty"`
 	JoinedAt    *time.Time `gorm:"type:timestamp" json:"joined_at,omitempty"`
 	CreatedAt   time.Time  `gorm:"autoCreateTime" json:"created_at"`
