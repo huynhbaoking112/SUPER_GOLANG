@@ -57,15 +57,16 @@ func (c *AuthController) Login(ctx *fiber.Ctx) error {
 		return common.ErrValidationFailed
 	}
 
-	token, err := c.authService.Login(&req)
+	token, user, err := c.authService.Login(&req)
 	if err != nil {
 		return err
 	}
 
 	c.setJWTCookie(ctx, token)
 
-	return ctx.Status(fiber.StatusOK).JSON(dto.MessageResponse{
-		Message: "Login successful",
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Login successful",
+		"data":    user,
 	})
 }
 

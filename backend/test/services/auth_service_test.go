@@ -223,6 +223,7 @@ func TestAuthService_Login(t *testing.T) {
 				mockRepo.On("GetUserByEmail", "test@example.com").Return(testUser, nil)
 				mockRepo.On("GetUserAuthProvider", "user-123", common.AuthProviderLocal).Return(testAuthProvider, nil)
 				mockRepo.On("UpdateUser", "user-123", mock.Anything).Return(nil)
+				mockRepo.On("GetUserWithWorkspaces", "user-123").Return(testUser, nil)
 			},
 			expectedError: nil,
 			expectToken:   true,
@@ -277,16 +278,18 @@ func TestAuthService_Login(t *testing.T) {
 			tt.setupMock(mockRepo)
 
 			authService := services.NewAuthService(mockRepo)
-			token, err := authService.Login(tt.request)
+			token, user, err := authService.Login(tt.request)
 
 			if tt.expectedError != nil {
 				assert.Error(t, err)
 				assert.Contains(t, err.Error(), tt.expectedError.Error())
 				assert.Empty(t, token)
+				assert.Nil(t, user)
 			} else {
 				assert.NoError(t, err)
 				if tt.expectToken {
 					assert.NotEmpty(t, token)
+					assert.NotNil(t, user)
 				}
 			}
 

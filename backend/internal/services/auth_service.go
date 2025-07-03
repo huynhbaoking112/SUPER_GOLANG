@@ -15,8 +15,8 @@ import (
 
 type AuthServiceInterface interface {
 	Signup(req *dto.SignupRequest) error
-	Login(req *dto.LoginRequest) (string, error) // returns JWT token
-	ValidateToken(token string) (string, error)  // returns userID
+	Login(req *dto.LoginRequest) (string, *models.User, error) // returns JWT token and user data
+	ValidateToken(token string) (string, error)                // returns userID
 }
 
 type AuthService struct {
@@ -74,29 +74,29 @@ func (s *AuthService) Signup(req *dto.SignupRequest) error {
 	})
 }
 
-func (s *AuthService) Login(req *dto.LoginRequest) (string, error) {
+func (s *AuthService) Login(req *dto.LoginRequest) (string, *models.User, error) {
 	user, err := s.userRepo.GetUserByEmail(req.Email)
 	if err != nil {
-		return "", fmt.Errorf("failed to get user: %w", err)
+		return "", nil, fmt.Errorf("failed to get user: %w", err)
 	}
 	if user == nil {
-		return "", common.ErrInvalidCredentials
+		return "", nil, common.ErrInvalidCredentials
 	}
 
 	if user.Status != common.UserStatusActive {
-		return "", common.ErrUserInactive
+		return "", nil, common.ErrUserInactive
 	}
 
 	authProvider, err := s.userRepo.GetUserAuthProvider(user.ID, common.AuthProviderLocal)
 	if err != nil {
-		return "", fmt.Errorf("failed to get auth provider: %w", err)
+		return "", nil, fmt.Errorf("failed to get auth provider: %w", err)
 	}
 	if authProvider == nil || authProvider.PasswordHash == nil {
-		return "", common.ErrInvalidCredentials
+		return "", nil, common.ErrInvalidCredentials
 	}
 
 	if !utils.CheckPassword(req.Password, *authProvider.PasswordHash) {
-		return "", common.ErrInvalidCredentials
+		return "", nil, common.ErrInvalidCredentials
 	}
 
 	err = s.userRepo.UpdateUser(user.ID, map[string]interface{}{
@@ -108,10 +108,15 @@ func (s *AuthService) Login(req *dto.LoginRequest) (string, error) {
 
 	token, err := utils.GenerateToken(user.ID)
 	if err != nil {
-		return "", fmt.Errorf("failed to generate token: %w", err)
+		return "", nil, fmt.Errorf("failed to generate token: %w", err)
 	}
 
-	return token, nil
+	userWithWorkspaces, err := s.userRepo.GetUserWithWorkspaces(user.ID)
+	if err != nil {
+		return token, nil, fmt.Errorf("failed to get user with workspaces: %w", err)
+	}
+
+	return token, userWithWorkspaces, nil
 }
 
 func (s *AuthService) ValidateToken(token string) (string, error) {
