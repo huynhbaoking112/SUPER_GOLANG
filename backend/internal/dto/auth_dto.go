@@ -1,5 +1,7 @@
 package dto
 
+import "go-backend-v2/internal/models"
+
 type SignupRequest struct {
 	Email     string `json:"email" validate:"required,email,max=255"`
 	Password  string `json:"password" validate:"required,min=6,max=128"`
@@ -10,6 +12,12 @@ type SignupRequest struct {
 type LoginRequest struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
+}
+
+type LoginResponse struct {
+	User           *models.User `json:"user"`
+	AccessToken    string       `json:"access_token"`
+	EncryptedToken string       `json:"encrypted_token"`
 }
 
 type MessageResponse struct {

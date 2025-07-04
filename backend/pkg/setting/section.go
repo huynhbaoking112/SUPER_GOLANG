@@ -34,6 +34,7 @@ type Mysql struct {
 type JWT struct {
 	Secret         string        `mapstructure:"secret"`
 	ExpirationTime time.Duration `mapstructure:"expiration_time"`
+	EncryptionKey  string        `mapstructure:"encryption_key"`
 }
 
 type Cookie struct {

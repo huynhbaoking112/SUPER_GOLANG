@@ -30,6 +30,7 @@ redis:
 jwt:
   secret: "SaphaKing"
   expiration_time: "72h"
+  encryption_key: "MySecretEncryptionKey32BytesKey!"
 
 cookie:
   domain: ""

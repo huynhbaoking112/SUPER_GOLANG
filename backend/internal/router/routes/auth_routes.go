@@ -2,6 +2,7 @@ package routes
 
 import (
 	"go-backend-v2/internal/controllers"
+	"go-backend-v2/internal/middlewares"
 	"go-backend-v2/internal/repo"
 	"go-backend-v2/internal/services"
 
@@ -9,7 +10,8 @@ import (
 )
 
 type AuthRoutes struct {
-	controller *controllers.AuthController
+	controller  *controllers.AuthController
+	authService services.AuthServiceInterface
 }
 
 func NewAuthRoutes() *AuthRoutes {
@@ -18,7 +20,8 @@ func NewAuthRoutes() *AuthRoutes {
 	authController := controllers.NewAuthController(authService)
 
 	return &AuthRoutes{
-		controller: authController,
+		controller:  authController,
+		authService: authService,
 	}
 }
 
@@ -31,5 +34,5 @@ func (r *AuthRoutes) SetupRoutes(router fiber.Router) {
 
 	authGroup.Post("/signup", r.controller.Signup)
 	authGroup.Post("/login", r.controller.Login)
-	authGroup.Post("/logout", r.controller.Logout)
+	authGroup.Post("/logout", middlewares.AuthMiddleware(r.authService), r.controller.Logout)
 }

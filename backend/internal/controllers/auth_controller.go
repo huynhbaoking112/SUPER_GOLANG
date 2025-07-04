@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"go-backend-v2/global"
 	"go-backend-v2/internal/common"
 	"go-backend-v2/internal/dto"
@@ -57,21 +58,39 @@ func (c *AuthController) Login(ctx *fiber.Ctx) error {
 		return common.ErrValidationFailed
 	}
 
-	token, user, err := c.authService.Login(&req)
+	loginResponse, err := c.authService.Login(&req)
 	if err != nil {
 		return err
 	}
 
-	c.setJWTCookie(ctx, token)
+	c.setJWTCookie(ctx, loginResponse.AccessToken)
+	c.setEncryptedTokenCookie(ctx, loginResponse.EncryptedToken)
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Login successful",
-		"data":    user,
+		"data":    loginResponse.User,
 	})
 }
 
 func (c *AuthController) Logout(ctx *fiber.Ctx) error {
+	userID := ctx.Locals(common.ContextUserID)
+	encryptedToken := ctx.Cookies(common.EncryptedTokenCookieName)
+
+	if userID != nil && encryptedToken != "" {
+		userIDStr, ok := userID.(string)
+		if ok {
+			err := c.authService.Logout(userIDStr, encryptedToken)
+			if err != nil {
+				fmt.Println("Failed to logout", err)
+				// Log error but don't fail logout
+				// TODO: Use proper logger instead of fmt.Printf
+			}
+		}
+	}
+
+	// Clear both cookies
 	c.clearJWTCookie(ctx)
+	c.clearEncryptedTokenCookie(ctx)
 
 	return ctx.Status(fiber.StatusOK).JSON(dto.MessageResponse{
 		Message: "Logout successful",
@@ -93,6 +112,30 @@ func (c *AuthController) setJWTCookie(ctx *fiber.Ctx, token string) {
 func (c *AuthController) clearJWTCookie(ctx *fiber.Ctx) {
 	ctx.Cookie(&fiber.Cookie{
 		Name:     common.JWTCookieName,
+		Value:    "",
+		MaxAge:   -1,
+		HTTPOnly: global.Config.Cookie.HttpOnly,
+		Secure:   global.Config.Cookie.Secure,
+		SameSite: c.getSameSiteValue(global.Config.Cookie.SameSite),
+		Domain:   global.Config.Cookie.Domain,
+	})
+}
+
+func (c *AuthController) setEncryptedTokenCookie(ctx *fiber.Ctx, token string) {
+	ctx.Cookie(&fiber.Cookie{
+		Name:     common.EncryptedTokenCookieName,
+		Value:    token,
+		MaxAge:   int(global.Config.JWT.ExpirationTime.Seconds()),
+		HTTPOnly: global.Config.Cookie.HttpOnly,
+		Secure:   global.Config.Cookie.Secure,
+		SameSite: c.getSameSiteValue(global.Config.Cookie.SameSite),
+		Domain:   global.Config.Cookie.Domain,
+	})
+}
+
+func (c *AuthController) clearEncryptedTokenCookie(ctx *fiber.Ctx) {
+	ctx.Cookie(&fiber.Cookie{
+		Name:     common.EncryptedTokenCookieName,
 		Value:    "",
 		MaxAge:   -1,
 		HTTPOnly: global.Config.Cookie.HttpOnly,

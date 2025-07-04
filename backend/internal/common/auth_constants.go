@@ -1,7 +1,8 @@
 package common
 
 const (
-	JWTCookieName = "access_token"
+	JWTCookieName            = "access_token"
+	EncryptedTokenCookieName = "encrypted_token"
 )
 
 const (
