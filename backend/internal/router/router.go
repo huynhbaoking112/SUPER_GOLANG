@@ -22,6 +22,7 @@ func NewRouteManager() *RouteManager {
 		routes.NewPublicRoutes(),
 		routes.NewAuthRoutes(),
 		routes.NewUserRoutes(),
+		routes.NewAdminRoutes(),
 	}
 
 	return &RouteManager{

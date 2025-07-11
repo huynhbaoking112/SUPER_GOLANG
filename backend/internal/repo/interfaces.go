@@ -29,21 +29,21 @@ type UserRepositoryInterface interface {
 }
 
 type WorkspaceRepositoryInterface interface {
-	CreateWorkspace(workspace *models.Workspace) error
+	CreateWorkspace(tx *gorm.DB, workspace *models.Workspace) error
 	GetWorkspaceByID(workspaceID string) (*models.Workspace, error)
 	GetWorkspaceBySlug(slug string) (*models.Workspace, error)
 	GetWorkspacesByOwnerID(ownerID string) ([]models.Workspace, error)
 	UpdateWorkspace(workspaceID string, updates map[string]interface{}) error
 	DeleteWorkspace(workspaceID string) error
 
-	CreateMembership(membership *models.UserWorkspaceMembership) error
+	CreateMembership(tx *gorm.DB, membership *models.UserWorkspaceMembership) error
 	GetMembership(userID, workspaceID string) (*models.UserWorkspaceMembership, error)
 	GetUserMemberships(userID string) ([]models.UserWorkspaceMembership, error)
 	GetWorkspaceMemberships(workspaceID string) ([]models.UserWorkspaceMembership, error)
 	UpdateMembership(membershipID string, updates map[string]interface{}) error
 	DeleteMembership(membershipID string) error
 
-	CreateWorkspaceRole(role *models.WorkspaceRole) error
+	CreateWorkspaceRole(tx *gorm.DB, role *models.WorkspaceRole) error
 	GetWorkspaceRole(roleID string) (*models.WorkspaceRole, error)
 	GetWorkspaceRoles(workspaceID string) ([]models.WorkspaceRole, error)
 	UpdateWorkspaceRole(roleID string, updates map[string]interface{}) error

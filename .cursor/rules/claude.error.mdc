@@ -5,3 +5,36 @@ alwaysApply: true
 ---
 - When you use any constant, you must create its constant in a constant file in the /internal/common for reuse and easy modification, avoid hardcoding, constant files must be divided into sets, for example user status is a constant file, error message is a constant file
 - when you do not understand or unclear about something, ask me again, do not assume
+- When you design model to save data don't use UUID but use BigInt
+- **JSON Serialization for Complex Types in GORM Models**: When using complex types (struct, map[string]interface{}, custom types) in GORM model fields that will be stored as JSON in MySQL, you MUST implement `sql.Scanner` and `driver.Valuer` interfaces to avoid "unsupported type" errors. Example:
+  ```go
+  // Custom type for JSON storage
+  type CustomJSONType map[string]interface{}
+  
+  // Scan implements sql.Scanner interface for reading from database
+  func (c *CustomJSONType) Scan(value interface{}) error {
+      if value == nil {
+          *c = make(CustomJSONType)
+          return nil
+      }
+      var bytes []byte
+      switch v := value.(type) {
+      case []byte:
+          bytes = v
+      case string:
+          bytes = []byte(v)
+      default:
+          return fmt.Errorf("cannot scan %T into CustomJSONType", value)
+      }
+      if len(bytes) == 0 {
+          *c = make(CustomJSONType)
+          return nil
+      }
+      return json.Unmarshal(bytes, c)
+  }
+  
+  // Value implements driver.Valuer interface for writing to database
+  func (c CustomJSONType) Value() (driver.Value, error) {
+      return json.Marshal(c)
+  }
+  ```

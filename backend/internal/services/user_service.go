@@ -6,12 +6,6 @@ import (
 	"go-backend-v2/internal/repo"
 )
 
-type UserServiceInterface interface {
-	GetUserWithWorkspaces(userID string) (*models.User, error)
-	GetUserProfile(userID string) (*models.User, error)
-	DeleteUser(userID string) error
-}
-
 type UserService struct {
 	userRepo repo.UserRepositoryInterface
 }

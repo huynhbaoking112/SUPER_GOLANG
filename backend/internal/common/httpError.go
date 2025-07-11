@@ -57,4 +57,26 @@ var (
 
 	// Database transaction errors
 	ErrTransactionFailed = &APIError{Status: http.StatusInternalServerError, Code: "TRANSACTION_FAILED", Message: "Database transaction failed"}
+
+	// Workspace creation errors
+	ErrWorkspaceCreateForbidden = &APIError{
+		Status:  http.StatusForbidden,
+		Code:    "WORKSPACE_CREATE_FORBIDDEN",
+		Message: "Only super admin users can create workspaces",
+	}
+	ErrWorkspaceNameRequired = &APIError{
+		Status:  http.StatusBadRequest,
+		Code:    "WORKSPACE_NAME_REQUIRED",
+		Message: "Workspace name is required",
+	}
+	ErrWorkspaceCreateFailed = &APIError{
+		Status:  http.StatusInternalServerError,
+		Code:    "WORKSPACE_CREATE_FAILED",
+		Message: "Failed to create workspace",
+	}
+	ErrWorkspaceSlugGeneration = &APIError{
+		Status:  http.StatusInternalServerError,
+		Code:    "WORKSPACE_SLUG_GENERATION_FAILED",
+		Message: "Failed to generate unique workspace slug",
+	}
 )

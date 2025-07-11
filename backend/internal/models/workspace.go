@@ -1,24 +1,61 @@
 package models
 
 import (
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
+// WorkspaceSettings represents workspace settings as a JSON type
+type WorkspaceSettings map[string]interface{}
+
+func (ws *WorkspaceSettings) Scan(value interface{}) error {
+	if value == nil {
+		*ws = make(WorkspaceSettings)
+		return nil
+	}
+
+	var bytes []byte
+	switch v := value.(type) {
+	case []byte:
+		bytes = v
+	case string:
+		bytes = []byte(v)
+	default:
+		return fmt.Errorf("cannot scan %T into WorkspaceSettings", value)
+	}
+
+	if len(bytes) == 0 {
+		*ws = make(WorkspaceSettings)
+		return nil
+	}
+
+	return json.Unmarshal(bytes, ws)
+}
+
+func (ws WorkspaceSettings) Value() (driver.Value, error) {
+	if ws == nil {
+		return nil, nil
+	}
+	return json.Marshal(ws)
+}
+
 // Workspace represents a multi-tenant workspace
 type Workspace struct {
-	ID          string                 `gorm:"type:varchar(36);primaryKey" json:"id"`
-	Name        string                 `gorm:"type:varchar(255);not null" json:"name"`
-	Slug        string                 `gorm:"type:varchar(100);uniqueIndex;not null" json:"slug"`
-	Description *string                `gorm:"type:text" json:"description,omitempty"`
-	AvatarURL   *string                `gorm:"type:varchar(500)" json:"avatar_url,omitempty"`
-	OwnerID     string                 `gorm:"type:varchar(36);not null;index" json:"owner_id"`
-	Settings    map[string]interface{} `gorm:"type:json" json:"settings,omitempty"`
-	Status      string                 `gorm:"type:varchar(50);not null;default:'active';index" json:"status"`
-	CreatedAt   time.Time              `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt   time.Time              `gorm:"autoUpdateTime" json:"updated_at"`
+	ID          string             `gorm:"type:varchar(36);primaryKey" json:"id"`
+	Name        string             `gorm:"type:varchar(255);not null" json:"name"`
+	Slug        string             `gorm:"type:varchar(100);uniqueIndex;not null" json:"slug"`
+	Description *string            `gorm:"type:text" json:"description,omitempty"`
+	AvatarURL   *string            `gorm:"type:varchar(500)" json:"avatar_url,omitempty"`
+	OwnerID     string             `gorm:"type:varchar(36);not null;index" json:"owner_id"`
+	Settings    *WorkspaceSettings `gorm:"type:json" json:"settings,omitempty"`
+	Status      string             `gorm:"type:varchar(50);not null;default:'active';index" json:"status"`
+	CreatedAt   time.Time          `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt   time.Time          `gorm:"autoUpdateTime" json:"updated_at"`
 
 	// Relationships
 	Owner       User                      `gorm:"constraint:OnDelete:RESTRICT" json:"owner,omitempty"`

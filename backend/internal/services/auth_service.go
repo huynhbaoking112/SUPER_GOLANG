@@ -15,19 +15,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type AuthServiceInterface interface {
-	Signup(req *dto.SignupRequest) error
-	Login(req *dto.LoginRequest) (*dto.LoginResponse, error) // returns login response with tokens
-	Logout(userID, encryptedToken string) error              // logout specific token
-	ValidateToken(token string) (string, error)              // returns userID
-
-	// Redis token operations
-	StoreTokenData(userID, encryptedToken string, tokenData *dto.UserTokenData) error
-	GetTokenData(userID, encryptedToken string) (*dto.UserTokenData, error)
-	DeleteTokenData(userID, encryptedToken string) error
-	InvalidateUserTokens(userID string) error
-}
-
 type AuthService struct {
 	userRepo repo.UserRepositoryInterface
 }
