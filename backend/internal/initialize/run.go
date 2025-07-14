@@ -2,10 +2,6 @@ package initialize
 
 import (
 	"fmt"
-	"go-backend-v2/global"
-
-	"github.com/redis/go-redis/v9"
-	"gorm.io/gorm"
 )
 
 // Run initializes all components in the correct order
@@ -25,18 +21,11 @@ func Run() {
 	// Initialize Redis connection
 	InitRedis()
 
+	// Initialize RabbitMQ connection
+	InitRabbitMQ()
+
 	// Initialize logger (if implemented)
 	// InitLogger()
 
 	fmt.Println("All components initialized successfully!")
-}
-
-// GetDB returns the global database instance
-func GetDB() *gorm.DB {
-	return global.DB
-}
-
-// GetRedis returns the global Redis client
-func GetRedis() *redis.Client {
-	return global.RedisClient
 }

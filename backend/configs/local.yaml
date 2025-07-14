@@ -3,9 +3,7 @@ server:
 
 mysql:
   host: localhost
-  # host: go-backend-mysql
   port: 3307
-  # port: 3306
   user: root
   password: root
   dbName: IAM
@@ -15,10 +13,9 @@ mysql:
   connMaxIdleTime: 60
 
 redis:
-  # host: go-backend-redis
   host: localhost
   port: 6379
-  password: King_112
+  password: Test_112
   db: 0
   poolSize: 20
   minIdleConns: 10
@@ -37,3 +34,10 @@ cookie:
   secure: false 
   http_only: true
   same_site: "Strict"
+
+rabbitmq:
+  host: "localhost"
+  port: 5672
+  user: "guest"
+  password: "guest"
+  iam_exchange: "iam_events_topic"

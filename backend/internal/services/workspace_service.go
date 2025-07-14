@@ -95,8 +95,6 @@ func (s *WorkspaceService) CreateWorkspace(userID string, req *dto.CreateWorkspa
 			return fmt.Errorf("failed to create membership: %w", err)
 		}
 
-		// TODO: Log workspace creation event (audit service)
-
 		result = &dto.WorkspaceResponse{
 			ID:          workspace.ID,
 			Name:        workspace.Name,
@@ -113,6 +111,22 @@ func (s *WorkspaceService) CreateWorkspace(userID string, req *dto.CreateWorkspa
 
 	if err != nil {
 		return nil, common.ErrWorkspaceCreateFailed
+	}
+
+	if global.EventTopicPublisher != nil {
+
+		payload := &dto.WorkspaceCreatedPayload{
+			WorkspaceID:   result.ID,
+			WorkspaceName: result.Name,
+			WorkspaceSlug: result.Slug,
+			CreatedByID:   userID,
+		}
+
+		go func() {
+			if err := global.EventTopicPublisher.Publish(common.WorkspaceCreatedLog, payload); err != nil {
+				fmt.Printf("Error publishing workspace creation event: %v\n", err)
+			}
+		}()
 	}
 
 	return result, nil

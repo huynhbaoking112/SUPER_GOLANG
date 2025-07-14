@@ -124,6 +124,17 @@ func (s *AuthService) Login(req *dto.LoginRequest) (*dto.LoginResponse, error) {
 		fmt.Printf("Warning: failed to cache token data in Redis: %v\n", err)
 	}
 
+	if global.EventTopicPublisher != nil {
+		payload := &dto.UserLoginPayload{
+			UserID: user.ID,
+		}
+		go func() {
+			if err := global.EventTopicPublisher.Publish(common.UserLoginLog, payload); err != nil {
+				fmt.Printf("Error publishing user login event: %v\n", err)
+			}
+		}()
+	}
+
 	return &dto.LoginResponse{
 		AccessToken:    token,
 		User:           userWithWorkspaces,

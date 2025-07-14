@@ -44,10 +44,19 @@ type Cookie struct {
 	SameSite string `mapstructure:"same_site"`
 }
 
+type RabbitMQ struct {
+	Host        string `mapstructure:"host"`
+	Port        int    `mapstructure:"port"`
+	User        string `mapstructure:"user"`
+	Password    string `mapstructure:"password"`
+	IamExchange string `mapstructure:"iam_exchange"`
+}
+
 type Config struct {
-	Server Server `mapstructure:"server"`
-	Redis  Redis  `mapstructure:"redis"`
-	Mysql  Mysql  `mapstructure:"mysql"`
-	JWT    JWT    `mapstructure:"jwt"`
-	Cookie Cookie `mapstructure:"cookie"`
+	Server   Server   `mapstructure:"server"`
+	Redis    Redis    `mapstructure:"redis"`
+	Mysql    Mysql    `mapstructure:"mysql"`
+	JWT      JWT      `mapstructure:"jwt"`
+	Cookie   Cookie   `mapstructure:"cookie"`
+	RabbitMQ RabbitMQ `mapstructure:"rabbitmq"`
 }

@@ -13,6 +13,21 @@ services:
       - ./redis.conf:/usr/local/etc/redis/redis.conf
     networks:
       - go-backend-network
+  
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: go-backend-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - go-backend-network
   mysql:
     image: mysql:8.0
     container_name: go-backend-mysql
@@ -32,6 +47,8 @@ volumes:
   redis_data:
     driver: local
   mysql_data:
+    driver: local
+  rabbitmq_data:
     driver: local
 
 networks:
