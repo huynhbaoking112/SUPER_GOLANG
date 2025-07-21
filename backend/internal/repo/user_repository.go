@@ -3,6 +3,7 @@ package repo
 import (
 	"fmt"
 	"go-backend-v2/global"
+	"go-backend-v2/internal/common"
 	"go-backend-v2/internal/models"
 
 	"gorm.io/gorm"
@@ -84,9 +85,9 @@ func (r *UserRepository) GetUserWithWorkspaces(userID string) (*models.User, err
 
 	err := r.db.
 		Preload("Profile").
-		Preload("WorkspaceMemberships").
-		Preload("WorkspaceMemberships.Workspace").
-		Preload("WorkspaceMemberships.Role").
+		Preload("WorkspaceMemberships", "status = ?", common.ActiveStatus).
+		Preload("WorkspaceMemberships.Workspace", "status = ?", common.ActiveStatus).
+		Preload("WorkspaceMemberships.Role", "status = ?", common.ActiveStatus).
 		Where("id = ?", userID).
 		First(&user).Error
 
