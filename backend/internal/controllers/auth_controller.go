@@ -68,7 +68,7 @@ func (c *AuthController) Login(ctx *fiber.Ctx) error {
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Login successful",
-		"data":    loginResponse.User,
+		"user":    loginResponse.User,
 	})
 }
 

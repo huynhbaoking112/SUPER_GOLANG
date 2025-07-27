@@ -28,7 +28,7 @@ var (
 	ErrTooManyRequests     = &APIError{Status: http.StatusTooManyRequests, Code: "TOO_MANY_REQUESTS", Message: "Too many requests"}
 
 	// Authentication specific errors
-	ErrInvalidCredentials   = &APIError{Status: http.StatusUnauthorized, Code: "INVALID_CREDENTIALS", Message: "Invalid email or password"}
+	ErrInvalidCredentials   = &APIError{Status: http.StatusNotFound, Code: "INVALID_CREDENTIALS", Message: "Invalid email or password"}
 	ErrUserInactive         = &APIError{Status: http.StatusForbidden, Code: "USER_INACTIVE", Message: "User account is inactive"}
 	ErrUserNotFound         = &APIError{Status: http.StatusNotFound, Code: "USER_NOT_FOUND", Message: "User not found"}
 	ErrTokenExpired         = &APIError{Status: http.StatusUnauthorized, Code: "TOKEN_EXPIRED", Message: "Token has expired"}

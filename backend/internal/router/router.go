@@ -4,7 +4,6 @@ import (
 	"go-backend-v2/internal/router/routes"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/helmet"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -35,12 +34,6 @@ func (rm *RouteManager) SetupRoutes(app *fiber.App) {
 
 	app.Use(helmet.New())
 	app.Use(recover.New())
-
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
-		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
-		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
-	}))
 
 	app.Use(logger.New(logger.Config{
 		Format:     "[${time}] ${status} - ${latency} ${method} ${path} - ${ip}\n",

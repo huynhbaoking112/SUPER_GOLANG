@@ -35,7 +35,7 @@ func (c *UserController) GetCurrentUser(ctx *fiber.Ctx) error {
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "User retrieved successfully",
-		"data":    user,
+		"user":    user,
 	})
 }
 
