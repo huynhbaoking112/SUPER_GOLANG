@@ -22,16 +22,13 @@ func main() {
 	})
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "http://localhost:5173",
-		AllowHeaders:     "Origin, Content-Type, Accept, Authorization, X-Requested-With",
+		AllowOrigins:     "http://localhost:5173, http://127.0.0.1:5173",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization, X-Requested-With, X-Organization-ID,X-User-ID",
 		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
 		AllowCredentials: true, // Chỉ bật khi cần thiết
 		ExposeHeaders:    "Set-Cookie, Authorization",
 		MaxAge:           86400,
 	}))
-	app.Options("/*", func(c *fiber.Ctx) error {
-		return c.Status(204).Send(nil)
-	})
 	app.Use(recover.New())
 
 	router.SetupRoutes(app)

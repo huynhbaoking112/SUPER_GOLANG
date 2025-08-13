@@ -5,7 +5,7 @@ alwaysApply: false
 ---
 # API Development Rules & Conventions
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 Our API follows **Clean Architecture** principles with modular router design:
 
@@ -30,7 +30,7 @@ backend/
 └── cmd/server/main.go        # Application entry point
 ```
 
-## 📋 Router Module Rules
+## Router Module Rules
 
 ### 1. **Route Module Structure**
 
@@ -91,7 +91,7 @@ func (r *{Domain}Routes) SetupRoutes(router fiber.Router) {
 ```
 
 
-## 🎯 Controller Rules
+## Controller Rules
 
 ### 1. **Controller Structure**
 
@@ -166,7 +166,7 @@ return c.JSON(fiber.Map{
 })
 ```
 
-## 🔗 Route Registration Rules
+## Route Registration Rules
 
 ### 1. **Main Router Setup**
 
@@ -203,7 +203,7 @@ func NewRouteManager() *RouteManager {
 }
 ```
 
-## 📊 API Versioning
+## API Versioning
 
 ### 1. **Version Structure**
 
