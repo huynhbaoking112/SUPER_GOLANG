@@ -32,7 +32,7 @@ jwt:
 cookie:
   domain: ""
   secure: false 
-  http_only: true
+  http_only: false
   same_site: "Strict"
 
 rabbitmq:
